@@ -6,14 +6,10 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: "deckname"
           AttributeType: "S"
-        - AttributeName: "setname"
-          AttributeType: "S"
       BillingMode: "PAY_PER_REQUEST"
       KeySchema: 
         - AttributeName: "deckname"
           KeyType: "HASH"
-        - AttributeName: "setname"
-          KeyType: "RANGE"
       OnDemandThroughput: 
         MaxReadRequestUnits: "1"
         MaxWriteRequestUnits: "1"
@@ -25,16 +21,11 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: "setname"
           AttributeType: "S"
-        - AttributeName: "lastpricecheckdate"
-          AttributeType: "S"
       BillingMode: "PAY_PER_REQUEST"
       KeySchema: 
         - AttributeName: "setname"
           KeyType: "HASH"
-        - AttributeName: "lastpricecheckdate"
-          KeyType: "RANGE"
       OnDemandThroughput: 
         MaxReadRequestUnits: "1"
         MaxWriteRequestUnits: "1"
       TableClass: "STANDARD"
-
