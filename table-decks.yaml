@@ -1,7 +1,8 @@
 Resources: 
-  DDBTable:
+  deckstable:
     Type: AWS::DynamoDB::Table
     Properties:
+      TableName: "decks"
       AttributeDefinitions: 
         - AttributeName: "deckname"
           AttributeType: "S"
@@ -17,4 +18,23 @@ Resources:
         MaxReadRequestUnits: "1"
         MaxWriteRequestUnits: "1"
       TableClass: "STANDARD"
-      TableName: "decks"
+  setstable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "sets"
+      AttributeDefinitions: 
+        - AttributeName: "setname"
+          AttributeType: "S"
+        - AttributeName: "lastpricecheckdate"
+          AttributeType: "S"
+      BillingMode: "PAY_PER_REQUEST"
+      KeySchema: 
+        - AttributeName: "setname"
+          KeyType: "HASH"
+        - AttributeName: "lastpricecheckdate"
+          KeyType: "RANGE"
+      OnDemandThroughput: 
+        MaxReadRequestUnits: "1"
+        MaxWriteRequestUnits: "1"
+      TableClass: "STANDARD"
+
