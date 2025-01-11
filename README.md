@@ -4,6 +4,7 @@ Get a list of MTG cards and see what they're worth
 # Prerequisites
 
 An AWS account (100% in the free tier)
+An MTG Mate account
 Python >= 3.11
 selenium: pip install selenium
 boto3: pip install boto3
