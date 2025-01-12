@@ -1,4 +1,5 @@
 Resources: 
+
   deckstable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -6,14 +7,19 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: "deckname"
           AttributeType: "S"
+        - AttributeName: "setname
+          AttributeType: "S"
       BillingMode: "PAY_PER_REQUEST"
       KeySchema: 
         - AttributeName: "deckname"
+          KeyType: "RANGE"
+        - AttributeName: "setname"
           KeyType: "HASH"
       OnDemandThroughput: 
         MaxReadRequestUnits: "1"
         MaxWriteRequestUnits: "1"
       TableClass: "STANDARD"
+      
   setstable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -24,6 +30,21 @@ Resources:
       BillingMode: "PAY_PER_REQUEST"
       KeySchema: 
         - AttributeName: "setname"
+          KeyType: "HASH"
+      OnDemandThroughput: 
+        MaxReadRequestUnits: "1"
+        MaxWriteRequestUnits: "1"
+      TableClass: "STANDARD"
+  cardsstable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "cards"
+      AttributeDefinitions: 
+        - AttributeName: "cardname"
+          AttributeType: "S"
+      BillingMode: "PAY_PER_REQUEST"
+      KeySchema: 
+        - AttributeName: "cardname"
           KeyType: "HASH"
       OnDemandThroughput: 
         MaxReadRequestUnits: "1"
