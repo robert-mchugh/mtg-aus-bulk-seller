@@ -10,4 +10,5 @@
 {'setname': 'Wilds of Eldraine Commander', 'mtgmateurl': 'https://www.mtgmate.com.au/buylist/magic_sets/woc', 'lastpricecheckdate': '0000-00-00'},
 {'setname': 'Commander Masters', 'mtgmateurl': 'https://www.mtgmate.com.au/buylist/magic_sets/cmm', 'lastpricecheckdate': '0000-00-00'},
 {'setname': 'Tales of Middle-earth Commander', 'mtgmateurl': 'https://www.mtgmate.com.au/buylist/magic_sets/ltc', 'lastpricecheckdate': '0000-00-00'},
+{'setname': 'March of the Machine Commander', 'mtgmateurl': 'https://www.mtgmate.com.au/buylist/magic_sets/moc', 'lastpricecheckdate': '0000-00-00'},
 {'setname': 'Phyrexia: All Will Be One Commander', 'mtgmateurl': 'https://www.mtgmate.com.au/buylist/magic_sets/onc', 'lastpricecheckdate': '0000-00-00'}]
