@@ -7,7 +7,7 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: "deckname"
           AttributeType: "S"
-        - AttributeName: "setname
+        - AttributeName: "setname"
           AttributeType: "S"
       BillingMode: "PAY_PER_REQUEST"
       KeySchema: 
