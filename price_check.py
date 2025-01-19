@@ -48,7 +48,7 @@ def determine_if_authed_to_mtgmate(page_source):
     else:
         return False
 
-def update_price_data(setname):
+def update_price_data(setname, authed, driver):
     #download sets.txt
     #get the URL
     s3bucket = "mtg-seller"
@@ -58,12 +58,13 @@ def update_price_data(setname):
     #master_sets = json.loads(parsed_json)
     thisSet = master_sets[setname]
     thisSetURL = thisSet["mtgmateurl"]
-    driver = webdriver.Chrome()
     
-    source = driver.get("https://www.mtgmate.com.au/users/sign_in") #this can be anything where the login page is presented
-    page_source = driver.page_source
-    authed = determine_if_authed_to_mtgmate(page_source)
+    
+
     if not authed:
+        driver = webdriver.Chrome()
+        source = driver.get("https://www.mtgmate.com.au/users/sign_in") #this can be anything where the login page is presented
+        page_source = driver.page_source
         input("log into mtg mate and press enter to continue...")
     driver.get(thisSetURL) #this has to be where the cards you want to check are
     
@@ -125,8 +126,11 @@ def update_all_prices():
     s3bucket = "mtg-seller"
     raw_sets = get_s3_file_content(s3bucket,"sets.txt")
     master_sets = ast.literal_eval(raw_sets)
+    driver = webdriver.Chrome()
+    source = driver.get("https://www.mtgmate.com.au/users/sign_in") #this can be anything where the login page is presented
+    input("log into mtg mate and press enter to continue...")
     for cardset in master_sets.keys():
-        update_price_data(cardset)
+        update_price_data(cardset, True, driver)
 
 def price_check(deckname):
     s3bucket = "mtg-seller"
@@ -152,24 +156,54 @@ def price_check(deckname):
     prices = ast.literal_eval(raw_prices)
 
 
-    theyWouldPay = 0
+    theyWouldPay1 = 0
+    theyWouldPay2 = 0
+    theyWouldPay3 = 0
+    theyWouldPay4 = 0
+    theyWouldPay5 = 0
     sellList = []
     keepList = []
+    keepValue = 0
     noMatchList = []
     for i in decklist:
 
         try :
             thisCard = prices[i]
-            if thisCard["quantityWanted"] > 0:
-                theyWouldPay = theyWouldPay + thisCard["price"]
+            if thisCard["quantityWanted"] >= 5:
+                theyWouldPay1 = theyWouldPay1 + thisCard["price"]
+                theyWouldPay2 = theyWouldPay2 + thisCard["price"]
+                theyWouldPay3 = theyWouldPay3 + thisCard["price"]
+                theyWouldPay4 = theyWouldPay4 + thisCard["price"]
+                theyWouldPay5 = theyWouldPay5 + thisCard["price"]
+                sellList.append([i,thisCard["price"]])
+            elif thisCard["quantityWanted"] == 4:
+                theyWouldPay1 = theyWouldPay1 + thisCard["price"]
+                theyWouldPay2 = theyWouldPay2 + thisCard["price"]
+                theyWouldPay3 = theyWouldPay3 + thisCard["price"]
+                theyWouldPay4 = theyWouldPay4 + thisCard["price"]
+                sellList.append([i,thisCard["price"]])
+            elif thisCard["quantityWanted"] == 3:
+                theyWouldPay1 = theyWouldPay1 + thisCard["price"]
+                theyWouldPay2 = theyWouldPay2 + thisCard["price"]
+                theyWouldPay3 = theyWouldPay3 + thisCard["price"]
+                sellList.append([i,thisCard["price"]])
+            elif thisCard["quantityWanted"] == 2:
+                theyWouldPay1 = theyWouldPay1 + thisCard["price"]
+                theyWouldPay2 = theyWouldPay2 + thisCard["price"]
+                sellList.append([i,thisCard["price"]])
+            elif thisCard["quantityWanted"] == 1:
+                theyWouldPay1 = theyWouldPay1 + thisCard["price"]
                 sellList.append([i,thisCard["price"]])
             else:
                 keepList.append([i,thisCard["price"]])
+                keepValue = keepValue + thisCard["price"]
         except KeyError:
             noMatchList.append(i)
-    return theyWouldPay, sellList, keepList, noMatchList
+    theyWouldPayList = [theyWouldPay1,theyWouldPay2,theyWouldPay3,theyWouldPay4,theyWouldPay5]
+    
+    return theyWouldPayList, sellList, keepList, keepValue, noMatchList
 
-#theyWouldPay, sellList, keepList, noMatchList = price_check("Squirreled Away")
+#theyWouldPayList, sellList, keepList, keepValue, noMatchList = price_check("Squirreled Away")
 
 def export_price_report():
     # Get msater data for decks and sets
@@ -182,8 +216,11 @@ def export_price_report():
         if master_decks[deck]["pathToDeckList"] == 'decks/UNDEFINED':
             print ("No decklist, skipping: " + deck)
             continue
-        theyWouldPay, sellList, keepList, noMatchList = price_check(deck)
-        report_output = report_output + master_decks[deck]["setname"] + "\t" + deck + "\t" + str(theyWouldPay) + "\n"
+        theyWouldPayList, sellList, keepList, keepValue, noMatchList = price_check(deck)
+        report_output = report_output + master_decks[deck]["setname"] + "\t" + deck + "\t" + \
+                        str(theyWouldPayList[0])+ "\t" + str(theyWouldPayList[1]) + "\t" + \
+                        str(theyWouldPayList[2]) + "\t" + str(theyWouldPayList[3]) + "\t" + \
+                        str(theyWouldPayList[4]) + "\t" + str(keepValue) + "\n"
     print("=======================================")
     print(report_output)
             
